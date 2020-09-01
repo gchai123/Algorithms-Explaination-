@@ -1,0 +1,374 @@
+#1: Two sum
+#Given an array of integers nums and and integer target, return the indices of the two numbers such that they add up to target.
+#You may assume that each input would have exactly one solution, and you may not use the same element twice.
+#You can return the answer in any order.
+#Example 1:
+#Input: nums = [2,7,11,15], target = 9
+#Output: [0,1]
+#Output: Because nums[0] + nums[1] == 9, we return [0, 1]
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        d={}
+        for i in range(len(nums)):
+            if target - nums[i] not in d:
+                d[nums[i]]=i
+            else:
+                return(d[target-nums[i]], i)
+Logics: 1. we set an empty dictionary. 2. for each element in the list, we check if target minus the number is in the dictionary,
+if not then we threw the number and it's index to the dictionary. 3. if the (target-number) is in the dictionary, then we find both numbers and return the saved index. 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 7: Reverse Integer
+Given a 32-bit signed integer, reverse digits of an integer.
+
+Example 1:
+
+Input: 123
+Output: 321
+Example 2:
+
+Input: -123
+Output: -321
+Example 3:
+
+Input: 120
+Output: 21
+
+class Solution:
+    def reverse(self, x: int) -> int:
+        a = abs(x)
+        num=0
+        while a!=0:
+            t = a%10
+            num=num*10+t
+            a=a//10
+        if x>=0 and num < 2**31:
+            return num
+        elif x<0 and num <= (2**31):
+            return -num
+        else:
+            return 0
+Logics: 1. we ignore the negative sign (use abs()). 2. we are going to have a new number which is reversed version, so we define the new number as num and starts with 0. 
+3. The way we filter out the last number is to keep the remainder of (a/10), then we update "a" with only keep the floor and put this new "a" to the next same round until we filter out all remianders.
+4. Inorder to do so, we need to define 1 more variables(the remainder t)
+5. This comes with the while loop. In the while loop, we follow steps 3 and 4, then update the new number with (*10+the new reminder t). after the loop is done we have the reversed number.
+6. Remember the environment only store integers within the 32-bit signed integer range: [−231,  231 − 1].Thus when we return the value we need to set the boundaries. 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 9. Palindrome Number
+Determine whether an integer is a palindrome. An integer is a palindrome when it reads the same backward as forward.
+
+Example 1:
+
+Input: 121
+Output: true
+Example 2:
+
+Input: -121
+Output: false
+Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+
+class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        num=0
+        a=abs(x)
+        while(a!=0):
+            tem = a%10
+            num = num*10+tem
+            a = a // 10
+        if x>=0 and x == num:
+            return True
+        else:
+            return False
+
+Logics: 1. this is simialr to the above one except the last step we know that if the original number is negative it's false for sure.
+----------------------------------------------------------------------------------------------------------------------------------------------
+# 13. Roman to Integer
+Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+For example, two is written as II in Roman numeral, just two one's added together. Twelve is written as, XII, which is simply X + II. The number twenty seven is written as XXVII, which is XX + V + II.
+
+Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.
+Given a roman numeral, convert it to an integer. Input is guaranteed to be within the range from 1 to 3999.
+
+Example 1:
+
+Input: "III"
+Output: 3
+Example 2:
+
+Input: "IV"
+Output: 4
+Example 3:
+
+Input: "IX"
+Output: 9
+Example 4:
+
+Input: "LVIII"
+Output: 58
+Explanation: L = 50, V= 5, III = 3.
+Example 5:
+
+Input: "MCMXCIV"
+Output: 1994
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.
+
+
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        d = {'I':1, 'V':5, 'X':10, 'L':50, 'C':100, 'D':500, 'M':1000}
+        num=0
+        for i in range(len(s)):
+            if i>0 and d[s[i]]>d[s[i-1]]:
+                num += d[s[i]]-2*d[s[i-1]]
+            else:
+                num += d[s[i]]
+        return num
+ 
+ Logics: 1. create a dictionary has all the values paried up. Based on the examples we see if the left roman's value is less than the right one then we use the right one minus the left one.
+ Otherwise we add all together from left to right.
+ 2. make the for loop to check if the roman is greater than it's left one, if yes then we minus the left one. Otherwise we keep summing up. 
+ 3. Notice we need to minus 2*the left vale, given teh example "MCMXCIV", since M>C and we start first loop at index 1 which is C, we add them togetehr num=M+C, then next loop
+ the rightside M > C then we need to minus C, where we want M-C, how ever the previous result is M+C, here we have M+C-C=M, but we want M-C, thus we need to make it M-2*C here, so 
+ we have (M+C) - 2*C = M-C.
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 14. Longest Common Prefix
+Write a function to find the longest common prefix string amongst an array of strings.
+
+If there is no common prefix, return an empty string "".
+
+Example 1:
+
+Input: ["flower","flow","flight"]
+Output: "fl"
+Example 2:
+
+Input: ["dog","racecar","car"]
+Output: ""
+Explanation: There is no common prefix among the input strings.
+
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        if not strs:
+            return ""
+        for i in range(len(strs[0])):
+            for s in strs[1:]:
+                if i >= len(s) or s[i] != strs[0][i]:
+                
+                    return strs[0][:i]
+        else:            
+            return strs[0]
+            
+Logics: 1. check the base case, if a strings has no words then return ""
+2. pick out the first word in the list, compare each letter of the first word with the same index letetr of all other words,
+if it's same we keep moving the index until we have the letter that not is the same as any of other words' letter we stop and return the common prefx we have found.
+3. Notice if the first word is longer than others and we move to the i index which is out of range for the rest words, it doesn't go to the statement (if s[i] != strs[0][i]), 
+thus we add or (i >= len(s)) here. (eg, strs = ['flower', 'flow','flow']
+4. Last case, if we have a list has all same words then return the first word. 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 20. Valid Parentheses
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+ 
+
+Example 1:
+
+Input: s = "()"
+Output: true
+Example 2:
+
+Input: s = "()[]{}"
+Output: true
+Example 3:
+
+Input: s = "(]"
+Output: false
+Example 4:
+
+Input: s = "([)]"
+Output: false
+Example 5:
+
+Input: s = "{[]}"
+Output: true
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        d = {'[':']','(':')','{':'}'}
+        leftpara=[]
+        for i in s:
+            if i in d:
+                leftpara.append(i)
+            elif len(leftpara) ==0 or i!= d[leftpara.pop()]:
+                return False
+        return len(leftpara) == 0
+ 
+Logics: 1. create a dictionary have the parantheses paired up.
+2. create a list to collect all left part of the parantheses
+3. in the str if the parantheses is in the dictionary (notice it will check the key in the dic) we add into the list
+4. We use pop() to find the last paran in the leftlist, if the first right paran is euqal to the pop one's right part then it's the complete paran
+if not we return false. Also, if there is only one paran then it's false too. 
+5. We keep popping out from the leftlist then if there is no paran left at the end it's complete paran, if not that means the for loop stoped because it doesn't 
+satisfy the if statement. 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 21. Merge Two Sorted Lists
+Merge two sorted linked lists and return it as a new sorted list. The new list should be made by splicing together the nodes of the first two lists.
+
+Example:
+
+Input: 1->2->4, 1->3->4
+Output: 1->1->2->3->4->4
+
+# Definition for singly-linked list.
+class ListNode:
+     def __init__(self, val=0, next=None):
+         self.val = val
+         self.next = next
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        curr = dummy = ListNode(0)
+        while l1 and l2:
+            if l1.val < l2.val:
+                curr.next=l1
+                l1=l1.next
+            else:
+                curr.next=l2
+                l2=l2.next
+            curr=curr.next
+        curr.next=l1 or l2
+        return dummy.next
+
+Logics: 1. creat a new linked list names curr start at Listnode(0).
+2. compare the l1 value and l2 value then choose the smaller one as the next one in curr list. 
+3. After each step done, we need to move to the next position in l1 and l2, also update the current position in curr
+3. There is one case all l2 is bigger than l1 or all l1 is bigger than l2, then it stucks in either the if statement or the else statment
+which result the cuur only has either l1 or l2. We need to make the next point = l1 or l2 to cover this case. 
+4. Lastly, comes back to the beginning since this is a linked list, now the curr is at the end of the list and curr.next will return None. Thus we need to make a dummy list = curr
+at the beginning so that when we move curr the dummy doesn't move and when we return dummy.next it returns the full list. 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 26. Remove Duplicates from Sorted Array
+Given a sorted array nums, remove the duplicates in-place such that each element appear only once and return the new length.
+
+Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory.
+
+Example 1:
+
+Given nums = [1,1,2],
+
+Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively.
+
+It doesn't matter what you leave beyond the returned length.
+Example 2:
+
+Given nums = [0,0,1,1,1,2,2,3,3,4],
+
+Your function should return length = 5, with the first five elements of nums being modified to 0, 1, 2, 3, and 4 respectively.
+
+It doesn't matter what values are set beyond the returned length.
+Clarification:
+
+Confused why the returned value is an integer but your answer is an array?
+
+Note that the input array is passed in by reference, which means modification to the input array will be known to the caller as well.
+
+Internally you can think of this:
+
+// nums is passed in by reference. (i.e., without making a copy)
+int len = removeDuplicates(nums);
+
+// any modification to nums in your function would be known by the caller.
+// using the length returned by your function, it prints the first len elements.
+for (int i = 0; i < len; i++) {
+    print(nums[i]);
+}
+
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        
+        if not nums:
+            return 0
+        count = 0
+        for i in range(len(nums)):
+            if nums[count] != nums[i]:
+                count += 1
+                nums[count] = nums[i]
+                
+        return count+1
+
+Logics: 1. check base case
+2. we check the first number, if the next isn't the same then we add count. If it's same we for loop go to next number until we find the next different number.
+3. Then compare the new different with the rest. 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+#27. Remove Element
+Given an array nums and a value val, remove all instances of that value in-place and return the new length.
+
+Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory.
+
+The order of elements can be changed. It doesn't matter what you leave beyond the new length.
+
+Example 1:
+
+Given nums = [3,2,2,3], val = 3,
+
+Your function should return length = 2, with the first two elements of nums being 2.
+
+It doesn't matter what you leave beyond the returned length.
+Example 2:
+
+Given nums = [0,1,2,2,3,0,4,2], val = 2,
+
+Your function should return length = 5, with the first five elements of nums containing 0, 1, 3, 0, and 4.
+
+Note that the order of those five elements can be arbitrary.
+
+It doesn't matter what values are set beyond the returned length.
+Clarification:
+
+Confused why the returned value is an integer but your answer is an array?
+
+Note that the input array is passed in by reference, which means modification to the input array will be known to the caller as well.
+
+Internally you can think of this:
+
+// nums is passed in by reference. (i.e., without making a copy)
+int len = removeElement(nums, val);
+
+// any modification to nums in your function would be known by the caller.
+// using the length returned by your function, it prints the first len elements.
+for (int i = 0; i < len; i++) {
+    print(nums[i]);
+}
+
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        i, j = 0, len(nums)-1
+        while i <= j:
+            if nums[i]==val:
+                nums[i], nums[j]=nums[j],nums[i]
+                j -= 1
+            else:
+                i += 1
+        return j+1
+        
+Logics: 1. this is similar to pop() method, rather, we cut off the last index each time.
+2. we have two pointers from beginning and last.
+3. as long as the i <= j, we keep check if the ith number is equal to val, if it is we swap i and j, means we through the one to the end of the list
+then we can use either pop() or update j -=1 to remove the last one.
+-----------------------------------------------------------------------------------------------------------------------------------------------------
